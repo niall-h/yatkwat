@@ -1,0 +1,10 @@
+{
+  "navbar": {
+    "home": "Home",
+    "jobs": "Jobs",
+    "housing": "Housing",
+    "marketplace": "Marketplace",
+    "services": "Services",
+    "immigration": "Immigration"
+  }
+}

@@ -1,14 +1,18 @@
 "use client";
 
 import {
+  Avatar,
+  Button,
   FormControl,
+  IconButton,
+  Menu,
   MenuItem,
   Select,
   SelectChangeEvent,
 } from "@mui/material";
 import LoginIcon from "@mui/icons-material/Login";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import EnglishFlagIcon from "@/public/assets/en-flag.svg";
 import BurmeseFlagIcon from "@/public/assets/mm-flag.svg";
 import { Locale } from "@/types/locale";
@@ -24,10 +28,18 @@ const navItems = [
 ];
 
 export function Navbar({ locale, dict }: { locale: Locale; dict: any }) {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [language, setLanguage] = useState<Locale>(locale);
+  const open = Boolean(anchorEl);
   const pathname = usePathname();
 
-  console.log(locale);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleLanguageChange = (event: SelectChangeEvent) => {
     const value = event.target.value;
@@ -50,13 +62,13 @@ export function Navbar({ locale, dict }: { locale: Locale; dict: any }) {
             <Link
               key={item.title}
               href={`/${locale}${item.href}`}
-              className="py-2 px-4 rounded-md hover:bg-orange-200/30 transition duration-100 text-lg"
+              className="py-2 px-2 rounded-md hover:bg-orange-200/30 transition duration-100"
             >
               {dict.navbar[item.title]}
             </Link>
           ))}
         </div>
-        <div className="flex gap-2 col-span-1 justify-end">
+        <div className="flex gap-2 col-span-1 justify-end items-center">
           <FormControl className="w-17" size="small">
             <Select
               labelId="language-label"
@@ -64,6 +76,7 @@ export function Navbar({ locale, dict }: { locale: Locale; dict: any }) {
               value={language}
               onChange={handleLanguageChange}
               sx={{
+                height: 36,
                 borderRadius: 3,
                 backgroundColor: "var(--color-amber-50)",
               }}
@@ -91,13 +104,48 @@ export function Navbar({ locale, dict }: { locale: Locale; dict: any }) {
               </MenuItem>
             </Select>
           </FormControl>
-          <Link
-            href="/login"
-            className="p-2 rounded-md hover:bg-orange-200/30 transition duration-100 flex gap-2"
+          <IconButton onClick={handleClick}>
+            <Avatar sx={{ width: 30, height: 30 }} />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            slotProps={{
+              paper: {
+                sx: {
+                  backgroundColor: "var(--color-amber-50)",
+                  borderRadius: 2,
+                },
+              },
+              list: {
+                sx: {
+                  py: 0,
+                },
+              },
+            }}
           >
-            <LoginIcon className="text-amber-950" />
-            Log In
-          </Link>
+            <MenuItem
+              onClick={handleClose}
+              sx={{ m: 0.5, px: 1.5, borderRadius: 2 }}
+            >
+              <span className="text-sm">Log in</span>
+            </MenuItem>
+            <MenuItem
+              onClick={handleClose}
+              sx={{ m: 0.5, px: 1.5, borderRadius: 2 }}
+            >
+              <span className="text-sm">Sign up</span>
+            </MenuItem>
+          </Menu>
         </div>
       </div>
     </nav>

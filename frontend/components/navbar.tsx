@@ -10,7 +10,6 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import LoginIcon from "@mui/icons-material/Login";
 import Link from "next/link";
 import React, { useState } from "react";
 import EnglishFlagIcon from "@/public/assets/en-flag.svg";
@@ -27,7 +26,7 @@ const navItems = [
   { title: "immigration", href: "/immigration" },
 ];
 
-export function Navbar({ locale, dict }: { locale: Locale; dict: any }) {
+export function NavbarLegacy({ locale, dict }: { locale: Locale; dict: any }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [language, setLanguage] = useState<Locale>(locale);
   const open = Boolean(anchorEl);
@@ -137,13 +136,13 @@ export function Navbar({ locale, dict }: { locale: Locale; dict: any }) {
               onClick={handleClose}
               sx={{ m: 0.5, px: 1.5, borderRadius: 2 }}
             >
-              <span className="text-sm">Log in</span>
+              <span>Log in</span>
             </MenuItem>
             <MenuItem
               onClick={handleClose}
               sx={{ m: 0.5, px: 1.5, borderRadius: 2 }}
             >
-              <span className="text-sm">Sign up</span>
+              <span>Sign up</span>
             </MenuItem>
           </Menu>
         </div>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 
-const locales = ["en", "my"];
+const locales = ["en", "mm"];
 const defaultLocale = "en";
 
 function getLocale(request: NextRequest) {
@@ -10,7 +10,6 @@ function getLocale(request: NextRequest) {
   request.headers.forEach((value, key) => {
     headers[key] = value;
   });
-  console.log("getLocale run");
 
   const languages = new Negotiator({ headers }).languages();
   return match(languages, locales, defaultLocale);
@@ -18,9 +17,19 @@ function getLocale(request: NextRequest) {
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  console.log("pathname", pathname);
 
-  // Already localized? Don’t redirect
+  const matchedLocale = locales.find(
+    (locale) => pathname === `/${locale}/home`
+  );
+  if (matchedLocale) {
+    return NextResponse.redirect(new URL(`/${matchedLocale}`, request.url));
+  }
+
+  if (pathname === "/home") {
+    const locale = getLocale(request);
+    return NextResponse.redirect(new URL(`/${locale}`, request.url));
+  }
+
   if (locales.some((locale) => pathname.startsWith(`/${locale}`))) {
     return NextResponse.next();
   }

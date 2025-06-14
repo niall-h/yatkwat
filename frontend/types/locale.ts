@@ -1,1 +1,1 @@
-export type Locale = "en" | "my" | undefined;
+export type Locale = "en" | "mm" | undefined;

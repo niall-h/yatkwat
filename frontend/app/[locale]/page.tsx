@@ -1,10 +1,20 @@
 import { Locale } from "@/types/locale";
 import { getDictionary } from "./dictionaries";
+import { Button, Card, CardBody } from "@heroui/react";
 
 export default async function Home({
   params,
 }: {
   params: Promise<{ lang: Locale }>;
 }) {
-  return <h1>hi</h1>;
+  return (
+    <div>
+      <Card>
+        <CardBody>
+          <p>SLJSLFJLJF</p>
+          <Button>Hi</Button>
+        </CardBody>
+      </Card>
+    </div>
+  );
 }

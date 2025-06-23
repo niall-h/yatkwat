@@ -1,5 +1,8 @@
 {
   "packageManager": "pnpm@10.12.2",
+  "scripts": {
+    "dev": "turbo dev"
+  },
   "devDependencies": {
     "turbo": "^2.5.4"
   }

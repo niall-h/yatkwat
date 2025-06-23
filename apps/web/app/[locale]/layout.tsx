@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Navbar } from "@/components/navbarnew";
+import { Navbar } from "@/components/navbar";
 import { getDictionary } from "./dictionaries";
 import { Locale } from "@/types/locale";
 

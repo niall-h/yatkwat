@@ -47,6 +47,9 @@ dependencies:
   next-intl:
     specifier: ^4.1.0
     version: 4.1.0(next@15.3.3)(react@19.1.0)(typescript@5.8.3)
+  postcss:
+    specifier: ^8.5.6
+    version: 8.5.6
   react:
     specifier: ^19.0.0
     version: 19.1.0
@@ -62,7 +65,7 @@ devDependencies:
     specifier: ^8.1.0
     version: 8.1.0(typescript@5.8.3)
   '@tailwindcss/postcss':
-    specifier: ^4
+    specifier: ^4.0.0
     version: 4.1.8
   '@types/negotiator':
     specifier: ^0.6.4
@@ -83,7 +86,7 @@ devDependencies:
     specifier: 15.3.3
     version: 15.3.3(eslint@9.28.0)(typescript@5.8.3)
   tailwindcss:
-    specifier: ^4
+    specifier: ^4.0.0
     version: 4.1.8
   typescript:
     specifier: ^5
@@ -5590,7 +5593,7 @@ packages:
       '@alloc/quick-lru': 5.2.0
       '@tailwindcss/node': 4.1.8
       '@tailwindcss/oxide': 4.1.8
-      postcss: 8.5.4
+      postcss: 8.5.6
       tailwindcss: 4.1.8
     dev: true
 
@@ -8107,14 +8110,13 @@ packages:
       source-map-js: 1.2.1
     dev: false
 
-  /postcss@8.5.4:
-    resolution: {integrity: sha512-QSa9EBe+uwlGTFmHsPKokv3B/oEMQZxfqW0QqNCyhpa6mB1afzulwn8hihglqAb2pOw+BJgNlmXQ8la2VeHB7w==}
+  /postcss@8.5.6:
+    resolution: {integrity: sha512-3Ybi1tAuwAP9s0r1UQ2J4n5Y0G05bJkpUIO0/bI9MhwmD70S5aTWbXGBwxHrelT+XM1k6dM0pk+SwNkpTRN7Pg==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.11
       picocolors: 1.1.1
       source-map-js: 1.2.1
-    dev: true
 
   /prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}

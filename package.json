@@ -1,11 +1,5 @@
 {
-  "name": "yatkwat",
-  "private": true,
-  "packageManager": "pnpm@8.6.12",
-  "scripts": {
-    "dev": "turbo run dev",
-    "build": "turbo run build"
-  },
+  "packageManager": "pnpm@10.12.2",
   "devDependencies": {
     "turbo": "^2.5.4"
   }

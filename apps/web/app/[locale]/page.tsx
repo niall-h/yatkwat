@@ -1,5 +1,5 @@
 import { Locale } from "@/types/locale";
-import { getDictionary } from "./dictionaries";
+import { getDictionary } from "../../lib/dictionaries";
 import { Button, Card, CardBody } from "@heroui/react";
 
 export default async function Home({

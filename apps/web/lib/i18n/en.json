@@ -1,0 +1,16 @@
+{
+  "navbar": {
+    "home": "Home",
+    "jobs": "Jobs",
+    "housing": "Housing",
+    "marketplace": "Marketplace",
+    "services": "Services",
+    "immigration": "Immigration"
+  },
+  "login": {
+    "login": "Login",
+    "signup": "Sign Up",
+    "description": "Login or signup to join the community",
+    "alternate-login-description": "Or sign in using one of the options below:"
+  }
+}

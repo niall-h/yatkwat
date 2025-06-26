@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/navbar";
-import { getDictionary } from "./dictionaries";
+import { getDictionary } from "../../lib/dictionaries";
 import { Locale } from "@/types/locale";
+import { LocaleProvider } from "@/lib/locale-context";
 
 export const metadata: Metadata = {
   title: "Yatkwat",
@@ -16,12 +17,14 @@ export default async function Layout({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  const t = await getDictionary(locale);
+  const dict = await getDictionary(locale);
 
   return (
-    <div className="mx-auto w-full max-w-screen-2xl sm:px-2 lg:px-4">
-      <Navbar locale={locale} dict={t} />
-      {children}
-    </div>
+    <LocaleProvider value={{ locale, dict }}>
+      <div className="mx-auto w-full max-w-screen-2xl sm:px-2 lg:px-4 flex flex-col h-screen">
+        <Navbar />
+        <main className="flex-1">{children}</main>
+      </div>
+    </LocaleProvider>
   );
 }

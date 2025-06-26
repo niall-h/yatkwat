@@ -7,6 +7,7 @@ import { Locale } from "@/types/locale";
 import {
   redirect,
   usePathname,
+  useRouter,
   useSelectedLayoutSegment,
 } from "next/navigation";
 import {
@@ -26,6 +27,7 @@ import {
 import UserIcon from "@/public/assets/user.svg";
 import LoginIcon from "@/public/assets/login.svg";
 import SignupIcon from "@/public/assets/signup.svg";
+import { useLocale } from "@/lib/locale-context";
 
 const NAV_ITEMS = [
   "home",
@@ -36,18 +38,23 @@ const NAV_ITEMS = [
   "immigration",
 ];
 
-export function Navbar({ locale, dict }: { locale: Locale; dict: any }) {
+export function Navbar() {
+  const { locale, dict } = useLocale();
+  const router = useRouter();
   const pathname = usePathname();
 
   const handleLanguageChange = (value: any) => {
     const segments = pathname.split("/");
-    const pathWithoutLocale = "/" + segments.slice(2).join("/");
+    const currentLocale = segments[1] as Locale;
 
-    if (value === "en" || value === "mm") {
-      redirect(`${value}/${pathWithoutLocale}`);
+    if (currentLocale === "en" || currentLocale === "mm") {
+      segments[1] = value;
     } else {
-      redirect(`/${pathWithoutLocale}`);
+      segments.splice(1, 0, value);
     }
+
+    const newPath = segments.join("/");
+    router.push(newPath);
   };
 
   return (

@@ -12,7 +12,7 @@ export default function RootLayout({
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </head>
       <body>
-        <div className="bg-orange-50 font-outfit text-amber-90">
+        <div className="font-outfit">
           <Providers>{children}</Providers>
         </div>
       </body>

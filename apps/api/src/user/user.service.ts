@@ -1,8 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Not, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 
 @Injectable()
@@ -15,12 +20,9 @@ export class UserService {
   create(createUserDto: CreateUserDto): Promise<User> {
     const user: User = new User();
 
-    user.name = createUserDto.name;
-    user.email = createUserDto.email;
     user.username = createUserDto.username;
+    user.email = createUserDto.email;
     user.password = createUserDto.password;
-    user.age = createUserDto.age;
-    user.gender = createUserDto.gender;
 
     return this.userRepo.save(user);
   }
@@ -37,15 +39,34 @@ export class UserService {
     return this.userRepo.findOneBy({ username });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    const updatedUser: User = new User();
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.findById(id);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
-    Object.assign(updatedUser, {
-      ...updateUserDto,
-      id,
+    if (updateUserDto.username && updateUserDto.username !== user.username) {
+      const existing = await this.userRepo.findOne({
+        where: {
+          username: updateUserDto.username,
+          id: Not(id),
+        },
+      });
+
+      if (existing) {
+        throw new ConflictException('Username is already in use.');
+      }
+    }
+
+    updateUserDto.username = updateUserDto.username?.trim().toLowerCase();
+
+    Object.entries(updateUserDto).forEach(([key, value]) => {
+      if (value !== undefined) {
+        user[key] = value;
+      }
     });
 
-    return this.userRepo.save(updatedUser);
+    return this.userRepo.save(user);
   }
 
   remove(id: number): Promise<DeleteResult> {

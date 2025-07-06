@@ -1,47 +1,90 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
   Delete,
+  UseGuards,
+  Req,
+  NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { DeleteResult } from 'typeorm';
+import { AuthGuard, JwtPayload } from 'src/auth/auth.guard';
+import { Request } from 'express';
+import { plainToInstance } from 'class-transformer';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.userService.create(createUserDto);
+  @Get()
+  async findAll(): Promise<UserResponseDto[]> {
+    const users = await this.userService.findAll();
+    return users.map((user) =>
+      plainToInstance(UserResponseDto, user, {
+        excludeExtraneousValues: true,
+      }),
+    );
   }
 
-  @Get()
-  findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  @UseGuards(AuthGuard)
+  @Get('me')
+  async getProfile(@Req() req: Request): Promise<UserResponseDto> {
+    const user = await this.userService.findById((req.user as JwtPayload).sub);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return plainToInstance(UserResponseDto, user, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Get(':id')
-  find(@Param('id') id: string): Promise<User | null> {
-    return this.userService.findById(+id);
+  async find(@Param('id') id: string): Promise<UserResponseDto> {
+    const user = await this.userService.findById(+id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return plainToInstance(UserResponseDto, user, {
+      excludeExtraneousValues: true,
+    });
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<User> {
-    return this.userService.update(+id, updateUserDto);
+    @Req() req: Request,
+  ): Promise<UserResponseDto> {
+    if (+id !== (req.user as JwtPayload).sub) {
+      throw new ForbiddenException('You can only update your own profile');
+    }
+    const user = await this.userService.update(+id, updateUserDto);
+
+    return plainToInstance(UserResponseDto, user, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<DeleteResult> {
-    return this.userService.remove(+id);
+  async remove(@Param('id') id: string): Promise<{ success: boolean }> {
+    const result = await this.userService.remove(+id);
+    if (result.affected === 0) {
+      throw new NotFoundException('User not found');
+    }
+
+    return { success: true };
   }
 }

@@ -1,16 +1,18 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -18,13 +20,45 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  async signIn(
+    @Body('username') username: string,
+    @Body('password') password: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.signIn(username, password);
+
+    res.cookie('access_token', result.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60,
+    });
+
+    return { success: true, redirectTo: '/home' };
   }
 
-  @UseGuards(AuthGuard)
-  @Get('profile')
-  getProfile(@Req() req: Request) {
-    return req.user;
+  @Post('register')
+  async signUp(
+    @Body('username') username: string,
+    @Body('email') email: string,
+    @Body('password') password: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.signUp(username, password, email);
+
+    res.cookie('access_token', result.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60,
+    });
+
+    return { success: true, redirectTo: '/home' };
+  }
+
+  @Post('logout')
+  async logOut(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('access_token');
+    return { success: true };
   }
 }

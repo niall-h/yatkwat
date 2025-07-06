@@ -12,23 +12,23 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 30 })
-  name: string;
-
-  @Column({ type: 'varchar', length: 50, unique: true })
-  email: string;
-
   @Column({ type: 'varchar', length: 15, unique: true })
   username: string;
 
   @Column({ type: 'varchar' })
   password: string;
 
-  @Column({ type: 'int' })
-  age: number;
+  @Column({ type: 'varchar', length: 50, unique: true })
+  email: string;
 
-  @Column({ type: 'enum', enum: ['m', 'f', 'u'] })
-  gender: string;
+  @Column({ type: 'varchar', length: 30, nullable: true })
+  name?: string;
+
+  @Column({ type: 'int', nullable: true })
+  age?: number;
+
+  @Column({ type: 'enum', enum: ['m', 'f', 'u'], nullable: true })
+  gender?: string;
 
   @BeforeInsert()
   async hashPassword() {
